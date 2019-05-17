@@ -49,7 +49,7 @@ resource "local_file" "kubeconfig" {
 }
 
 module "efd" {
-  source = "git::git@github.com:lsst-sqre/terraform-efd.git//?ref=master"
+  source = "git::https://github.com/lsst-sqre/terraform-efd.git//?ref=master"
 
   # replace with data lookup?
   domain_name = "${var.domain_name}"
