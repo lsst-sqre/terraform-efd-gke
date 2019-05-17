@@ -71,7 +71,7 @@ module "efd" {
   influxdb_admin_pass            = "${var.influxdb_admin_pass}"
   influxdb_admin_user            = "${var.influxdb_admin_user}"
   influxdb_telegraf_pass         = "${var.influxdb_telegraf_pass}"
-  kubeconfig_filename            = "${local_file.kubeconfig.filename}"
+  kubeconfig_filename            = "${local.kubeconfig_filename}"
   prometheus_oauth_client_id     = "${var.prometheus_oauth_client_id}"
   prometheus_oauth_client_secret = "${var.prometheus_oauth_client_secret}"
   prometheus_oauth_github_org    = "${var.prometheus_oauth_github_org}"
