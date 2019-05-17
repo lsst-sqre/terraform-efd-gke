@@ -58,6 +58,19 @@ terragrunt = {
 | zookeeper\_data\_dir\_size | Size for Data dir, where ZooKeeper will store the in-memory database snapshots. | string | `"15Gi"` | no |
 | zookeeper\_log\_dir\_size | Size for data log dir, which is a dedicated log device to be used, and helps avoid competition between logging and snaphots. | string | `"15Gi"` | no |
 
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| confluent\_lb0 |  |
+| confluent\_lb1 |  |
+| confluent\_lb2 |  |
+| grafana\_fqdn |  |
+| influxdb\_fqdn |  |
+| kubeconfig\_filename |  |
+| nginx\_ingress\_ip |  |
+| prometheus\_fqdn |  |
+
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 `helm`
