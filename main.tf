@@ -48,8 +48,8 @@ resource "local_file" "kubeconfig" {
   depends_on = ["module.gke"]
 }
 
-module "efd_kafka" {
-  source = "git::git@github.com:lsst-sqre/terraform-efd-kafka.git//?ref=master"
+module "efd" {
+  source = "git::git@github.com:lsst-sqre/terraform-efd.git//?ref=master"
 
   # replace with data lookup?
   domain_name = "${var.domain_name}"

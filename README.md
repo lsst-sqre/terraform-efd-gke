@@ -1,7 +1,9 @@
-terraform efd-kafka-gke "top level" deployment
+terraform efd-gke "top level" deployment
 ===
 
-[![Build Status](https://travis-ci.org/lsst-sqre/terraform-efd-kafka.png)](https://travis-ci.org/lsst-sqre/terraform-efd-kafka)
+[![Build Status](https://travis-ci.org/lsst-sqre/terraform-efd.png)](https://travis-ci.org/lsst-sqre/terraform-efd)
+
+Deploys an `efd` instance on top of a `gke` cluster.
 
 Usage
 ---
@@ -15,7 +17,7 @@ may be inappropriate in a module.
 ```terraform
 terragrunt = {
   terraform {
-    source = "git::git@github.com:lsst-sqre/terraform-efd-kafka-gke.git//?ref=master"
+    source = "git::git@github.com:lsst-sqre/terraform-efd-gke.git//?ref=master"
   }
 }
 ```
@@ -27,7 +29,7 @@ terragrunt = {
 |------|-------------|:----:|:-----:|:-----:|
 | aws\_zone\_id | route53 Hosted Zone ID to manage DNS records in. | string | n/a | yes |
 | brokers\_disk\_size | Disk size for the cp-kafka brokers. | string | `"15Gi"` | no |
-| deploy\_name | Name of deployment. | string | `"efd-kafka"` | no |
+| deploy\_name | Name of deployment. | string | `"efd"` | no |
 | dns\_enable | create route53 dns records. | string | `"false"` | no |
 | domain\_name | DNS domain name to use when creating route53 records. | string | n/a | yes |
 | env\_name | Name of deployment environment. | string | n/a | yes |

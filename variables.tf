@@ -47,7 +47,7 @@ variable "machine_type" {
 }
 
 #
-# efd-kafka mod passed through vars
+# efd mod passed through vars
 #
 variable "env_name" {
   description = "Name of deployment environment."
@@ -55,7 +55,7 @@ variable "env_name" {
 
 variable "deploy_name" {
   description = "Name of deployment."
-  default     = "efd-kafka"
+  default     = "efd"
 }
 
 variable "aws_zone_id" {
