@@ -22,13 +22,6 @@ provider "google" {
   zone    = "${var.google_zone}"
 }
 
-provider "kubernetes" {
-  version = "~> 1.6.2"
-
-  config_path      = "${local.kubeconfig_filename}"
-  load_config_file = true
-}
-
 module "gke" {
   source = "git::https://github.com/lsst-sqre/terraform-gke-std.git//?ref=2.x"
 
@@ -38,14 +31,34 @@ module "gke" {
   machine_type       = "${var.machine_type}"
 }
 
-# write out our own copy of kubeconfig
-# there does not seem to be a sane way to ignore changes in the file on disk
-resource "local_file" "kubeconfig" {
-  content  = "${module.gke.kubeconfig}"
-  filename = "${local.kubeconfig_filename}"
+provider "kubernetes" {
+  version = "~> 1.7.0"
 
-  # this forces the gke cluster to be up before proceeding to the efd deployment
-  depends_on = ["module.gke"]
+  load_config_file       = false
+  host                   = "${module.gke.host}"
+  cluster_ca_certificate = "${base64decode(module.gke.cluster_ca_certificate)}"
+  token                  = "${module.gke.token}"
+}
+
+module "tiller" {
+  source = "git::https://github.com/lsst-sqre/terraform-tinfoil-tiller.git?ref=0.9.x"
+
+  namespace = "kube-system"
+}
+
+provider "helm" {
+  version = "~> 0.9.1"
+
+  service_account = "${module.tiller.service_account}"
+  namespace       = "${module.tiller.namespace}"
+  install_tiller  = false
+
+  kubernetes {
+    load_config_file       = false
+    host                   = "${module.gke.host}"
+    cluster_ca_certificate = "${base64decode(module.gke.cluster_ca_certificate)}"
+    token                  = "${module.gke.token}"
+  }
 }
 
 module "efd" {
@@ -71,7 +84,6 @@ module "efd" {
   influxdb_admin_pass            = "${var.influxdb_admin_pass}"
   influxdb_admin_user            = "${var.influxdb_admin_user}"
   influxdb_telegraf_pass         = "${var.influxdb_telegraf_pass}"
-  kubeconfig_filename            = "${local.kubeconfig_filename}"
   prometheus_oauth_client_id     = "${var.prometheus_oauth_client_id}"
   prometheus_oauth_client_secret = "${var.prometheus_oauth_client_secret}"
   prometheus_oauth_github_org    = "${var.prometheus_oauth_github_org}"
