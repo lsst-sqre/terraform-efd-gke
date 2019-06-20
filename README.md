@@ -62,9 +62,7 @@ terragrunt = {
 
 | Name | Description |
 |------|-------------|
-| confluent\_lb0 |  |
-| confluent\_lb1 |  |
-| confluent\_lb2 |  |
+| confluent\_lb\_ips |  |
 | grafana\_fqdn |  |
 | influxdb\_fqdn |  |
 | kubeconfig\_filename |  |
