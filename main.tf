@@ -92,3 +92,9 @@ module "efd" {
   zookeeper_data_dir_size        = "${var.zookeeper_data_dir_size}"
   zookeeper_log_dir_size         = "${var.zookeeper_log_dir_size}"
 }
+
+provider "influxdb" {
+  url      = "https://${local.dns_prefix}influxdb-${var.deploy_name}.${var.domain_name}"
+  username = "${var.influxdb_admin_user}"
+  password = "${var.influxdb_admin_pass}"
+}
