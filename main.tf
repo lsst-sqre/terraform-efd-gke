@@ -40,10 +40,16 @@ provider "kubernetes" {
   token                  = "${module.gke.token}"
 }
 
+resource "kubernetes_namespace" "tiller" {
+  metadata {
+    name = "tiller"
+  }
+}
+
 module "tiller" {
   source = "git::https://github.com/lsst-sqre/terraform-tinfoil-tiller.git?ref=0.9.x"
 
-  namespace = "kube-system"
+  namespace = "${kubernetes_namespace.tiller.metadata.0.name}"
 }
 
 provider "helm" {
@@ -62,7 +68,7 @@ provider "helm" {
 }
 
 module "efd" {
-  source = "git::https://github.com/lsst-sqre/terraform-efd.git//?ref=7.7.7"
+  source = "git::https://github.com/lsst-sqre/terraform-efd.git//?ref=8.0.0"
 
   # replace with data lookup?
   domain_name = "${var.domain_name}"
