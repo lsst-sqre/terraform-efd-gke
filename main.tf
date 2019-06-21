@@ -40,10 +40,16 @@ provider "kubernetes" {
   token                  = "${module.gke.token}"
 }
 
+resource "kubernetes_namespace" "tiller" {
+  metadata {
+    name = "tiller"
+  }
+}
+
 module "tiller" {
   source = "git::https://github.com/lsst-sqre/terraform-tinfoil-tiller.git?ref=0.9.x"
 
-  namespace = "kube-system"
+  namespace = "${kubernetes_namespace.tiller.metadata.0.name}"
 }
 
 provider "helm" {
