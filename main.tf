@@ -47,13 +47,13 @@ resource "kubernetes_namespace" "tiller" {
 }
 
 module "tiller" {
-  source = "git::https://github.com/lsst-sqre/terraform-tinfoil-tiller.git?ref=0.9.x"
+  source = "git::https://github.com/lsst-sqre/terraform-tinfoil-tiller.git?ref=0.10.x"
 
   namespace = "${kubernetes_namespace.tiller.metadata.0.name}"
 }
 
 provider "helm" {
-  version = "~> 0.9.1"
+  version = "~> 0.10.0"
 
   service_account = "${module.tiller.service_account}"
   namespace       = "${module.tiller.namespace}"
