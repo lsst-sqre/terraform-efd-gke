@@ -23,7 +23,7 @@ provider "google" {
 }
 
 module "gke" {
-  source = "git::https://github.com/lsst-sqre/terraform-gke-std.git//?ref=2.x"
+  source = "git::https://github.com/lsst-sqre/terraform-gke-std.git//?ref=3.0.0"
 
   name               = "${local.gke_cluster_name}"
   gke_version        = "${var.gke_version}"
