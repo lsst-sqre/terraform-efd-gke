@@ -77,7 +77,7 @@ terragrunt = {
 Vault Secrets
 ---
 
-See [[vault.md]]
+See [`vault.md`](./vault.md)
 
 `helm`
 ---

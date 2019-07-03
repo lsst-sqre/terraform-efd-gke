@@ -76,7 +76,7 @@ provider "helm" {
 }
 
 module "efd" {
-  source = "git::https://github.com/lsst-sqre/terraform-efd.git//?ref=8.1.0"
+  source = "git::https://github.com/lsst-sqre/terraform-efd.git//?ref=0.1.0"
 
   # replace with data lookup?
   domain_name = "${var.domain_name}"
