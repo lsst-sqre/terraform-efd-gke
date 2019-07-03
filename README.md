@@ -34,27 +34,25 @@ terragrunt = {
 | dns\_overwrite | overwrite pre-existing DNS records | string | `"false"` | no |
 | domain\_name | DNS domain name to use when creating route53 records. | string | n/a | yes |
 | env\_name | Name of deployment environment. | string | n/a | yes |
-| github\_token | GitHub personal access token for authenticating to the GitHub API | string | n/a | yes |
-| github\_user | GitHub username for authenticating to the GitHub API. | string | n/a | yes |
+| github\_token | GitHub personal access token for authenticating to the GitHub API. (defaul: vault) | string | `""` | no |
+| github\_user | GitHub username for authenticating to the GitHub API. (defaul: vault) | string | `""` | no |
 | gke\_version | gke master/node version | string | `"latest"` | no |
 | google\_project | google cloud project ID | string | `"plasma-geode-127520"` | no |
 | google\_region | google cloud region | string | `"us-central1"` | no |
 | google\_zone | google cloud region/zone | string | `"us-central1-b"` | no |
-| grafana\_admin\_pass | grafana admin account passphrase. | string | n/a | yes |
-| grafana\_admin\_user | grafana admin account name. | string | `"admin"` | no |
-| grafana\_oauth\_client\_id | github oauth Client ID for grafana | string | n/a | yes |
-| grafana\_oauth\_client\_secret | github oauth Client Secret for grafana. | string | n/a | yes |
-| grafana\_oauth\_team\_ids | github team id (integer value treated as string) | string | n/a | yes |
-| influxdb\_admin\_pass | influxdb admin account passphrase. | string | n/a | yes |
-| influxdb\_admin\_user | influxdb admin account name. | string | `"admin"` | no |
-| influxdb\_telegraf\_pass | InfluxDB password for the telegraf user. | string | n/a | yes |
+| grafana\_oauth\_client\_id | github oauth Client ID for grafana. (default: vault) | string | `""` | no |
+| grafana\_oauth\_client\_secret | github oauth Client Secret for grafana. (default: vault) | string | `""` | no |
+| grafana\_oauth\_team\_ids | github team id (integer value treated as string) | string | `"1936535"` | no |
+| influxdb\_admin\_pass | influxdb admin account passphrase. (default: vault) | string | `""` | no |
+| influxdb\_admin\_user | influxdb admin account name. (default: vault) | string | `""` | no |
+| influxdb\_telegraf\_pass | InfluxDB password for the telegraf user. (default: vault) | string | `""` | no |
 | initial\_node\_count | number of gke nodes to start | string | `"3"` | no |
 | machine\_type | machine type of default gke pool nodes | string | `"n1-standard-2"` | no |
-| prometheus\_oauth\_client\_id | github oauth client id | string | n/a | yes |
-| prometheus\_oauth\_client\_secret | github oauth client secret | string | n/a | yes |
-| prometheus\_oauth\_github\_org | limit access to prometheus dashboard to members of this org | string | n/a | yes |
-| tls\_crt\_path | wildcard tls certificate. | string | n/a | yes |
-| tls\_key\_path | wildcard tls private key. | string | n/a | yes |
+| prometheus\_oauth\_client\_id | github oauth client id. (default: vault) | string | `""` | no |
+| prometheus\_oauth\_client\_secret | github oauth client secret. (default: vault) | string | `""` | no |
+| prometheus\_oauth\_github\_org | limit access to prometheus dashboard to members of this org | string | `"lsst-sqre"` | no |
+| tls\_crt | wildcard tls certificate. (default: vault) | string | `""` | no |
+| tls\_key | wildcard tls private key. (default: vault) | string | `""` | no |
 | zookeeper\_data\_dir\_size | Size for Data dir, where ZooKeeper will store the in-memory database snapshots. | string | `"15Gi"` | no |
 | zookeeper\_log\_dir\_size | Size for data log dir, which is a dedicated log device to be used, and helps avoid competition between logging and snaphots. | string | `"15Gi"` | no |
 
@@ -65,10 +63,14 @@ terragrunt = {
 | confluent\_lb0 |  |
 | confluent\_lb1 |  |
 | confluent\_lb2 |  |
-| grafana\_fqdn |  |
-| influxdb\_fqdn |  |
+| grafana\_admin\_pass | grafana admin user account password. |
+| grafana\_admin\_user | name of the grafana admin user account. |
+| grafana\_fqdn | fqdn of grafana service. |
+| grafana\_url | url of grafana dashboard. |
+| influxdb\_fqdn | fqdn of influxdb service. |
 | nginx\_ingress\_ip |  |
-| prometheus\_fqdn |  |
+| prometheus\_fqdn | fqdn of prometheus service. |
+| prometheus\_url | url of prometheus dashboard. |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
