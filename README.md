@@ -74,6 +74,11 @@ terragrunt = {
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
+Vault Secrets
+---
+
+See [[vault.md]]
+
 `helm`
 ---
 
