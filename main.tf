@@ -10,6 +10,14 @@ provider "local" {
   version = "~> 1.2"
 }
 
+provider "random" {
+  version = "~> 2.1"
+}
+
+provider "vault" {
+  version = "~> 2.0"
+}
+
 provider "aws" {
   version = "~> 2.10.0"
   region  = "us-east-1"
@@ -23,7 +31,7 @@ provider "google" {
 }
 
 module "gke" {
-  source = "git::https://github.com/lsst-sqre/terraform-gke-std.git//?ref=2.x"
+  source = "git::https://github.com/lsst-sqre/terraform-gke-std.git//?ref=3.0.0"
 
   name               = "${local.gke_cluster_name}"
   gke_version        = "${var.gke_version}"
@@ -80,27 +88,27 @@ module "efd" {
   dns_enable                     = "${var.dns_enable}"
   dns_overwrite                  = "${var.dns_overwrite}"
   env_name                       = "${var.env_name}"
-  github_token                   = "${var.github_token}"
-  github_user                    = "${var.github_user}"
-  grafana_admin_pass             = "${var.grafana_admin_pass}"
-  grafana_admin_user             = "${var.grafana_admin_user}"
-  grafana_oauth_client_id        = "${var.grafana_oauth_client_id}"
-  grafana_oauth_client_secret    = "${var.grafana_oauth_client_secret}"
-  grafana_oauth_team_ids         = "${var.grafana_oauth_team_ids}"
-  influxdb_admin_pass            = "${var.influxdb_admin_pass}"
-  influxdb_admin_user            = "${var.influxdb_admin_user}"
-  influxdb_telegraf_pass         = "${var.influxdb_telegraf_pass}"
-  prometheus_oauth_client_id     = "${var.prometheus_oauth_client_id}"
-  prometheus_oauth_client_secret = "${var.prometheus_oauth_client_secret}"
-  prometheus_oauth_github_org    = "${var.prometheus_oauth_github_org}"
-  tls_crt_path                   = "${var.tls_crt_path}"
-  tls_key_path                   = "${var.tls_key_path}"
   zookeeper_data_dir_size        = "${var.zookeeper_data_dir_size}"
   zookeeper_log_dir_size         = "${var.zookeeper_log_dir_size}"
+  grafana_admin_pass             = "${local.grafana_admin_pass}"
+  grafana_admin_user             = "${local.grafana_admin_user}"
+  github_token                   = "${local.github_token}"
+  github_user                    = "${local.github_user}"
+  grafana_oauth_client_id        = "${local.grafana_oauth_client_id}"
+  grafana_oauth_client_secret    = "${local.grafana_oauth_client_secret}"
+  grafana_oauth_team_ids         = "${var.grafana_oauth_team_ids}"
+  influxdb_admin_pass            = "${local.influxdb_admin_pass}"
+  influxdb_admin_user            = "${local.influxdb_admin_user}"
+  influxdb_telegraf_pass         = "${local.influxdb_telegraf_pass}"
+  prometheus_oauth_client_id     = "${local.prometheus_oauth_client_id}"
+  prometheus_oauth_client_secret = "${local.prometheus_oauth_client_secret}"
+  prometheus_oauth_github_org    = "${var.prometheus_oauth_github_org}"
+  tls_crt                        = "${local.tls_crt}"
+  tls_key                        = "${local.tls_key}"
 }
 
 provider "influxdb" {
   url      = "https://${local.dns_prefix}influxdb-${var.deploy_name}.${var.domain_name}"
-  username = "${var.influxdb_admin_user}"
-  password = "${var.influxdb_admin_pass}"
+  username = "${local.influxdb_admin_user}"
+  password = "${local.influxdb_admin_pass}"
 }

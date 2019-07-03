@@ -16,18 +16,6 @@ variable "google_zone" {
   default     = "us-central1-b"
 }
 
-locals {
-  # Name of google cloud container cluster to deploy into
-  gke_cluster_name = "${var.deploy_name}-${var.env_name}"
-}
-
-#
-# kubernetes provider related vars
-#
-locals {
-  kubeconfig_filename = "${path.module}/kubeconfig_${local.gke_cluster_name}"
-}
-
 #
 # gke-std mod passed through vars
 #
@@ -66,35 +54,6 @@ variable "domain_name" {
   description = "DNS domain name to use when creating route53 records."
 }
 
-variable "grafana_oauth_client_id" {
-  description = "github oauth Client ID for grafana"
-}
-
-variable "grafana_oauth_client_secret" {
-  description = "github oauth Client Secret for grafana."
-}
-
-variable "grafana_oauth_team_ids" {
-  description = "github team id (integer value treated as string)"
-}
-
-variable "grafana_admin_user" {
-  description = "grafana admin account name."
-  default     = "admin"
-}
-
-variable "grafana_admin_pass" {
-  description = "grafana admin account passphrase."
-}
-
-variable "tls_crt_path" {
-  description = "wildcard tls certificate."
-}
-
-variable "tls_key_path" {
-  description = "wildcard tls private key."
-}
-
 variable "dns_enable" {
   description = "create route53 dns records."
   default     = false
@@ -103,38 +62,6 @@ variable "dns_enable" {
 variable "dns_overwrite" {
   description = "overwrite pre-existing DNS records"
   default     = false
-}
-
-locals {
-  # remove "<env>-" prefix for production
-  dns_prefix = "${replace("${var.env_name}-", "prod-", "")}"
-
-  prometheus_k8s_namespace     = "monitoring"
-  kafka_k8s_namespace          = "kafka"
-  grafana_k8s_namespace        = "grafana"
-  influxdb_k8s_namespace       = "influxdb"
-  telegraf_k8s_namespace       = "telegraf"
-  nginx_ingress_k8s_namespace  = "nginx-ingress"
-  kafka_efd_apps_k8s_namespace = "kafka-efd-apps"
-  tls_crt                      = "${file(var.tls_crt_path)}"
-  tls_key                      = "${file(var.tls_key_path)}"
-}
-
-variable "influxdb_admin_user" {
-  description = "influxdb admin account name."
-  default     = "admin"
-}
-
-variable "influxdb_admin_pass" {
-  description = "influxdb admin account passphrase."
-}
-
-variable "github_user" {
-  description = "GitHub username for authenticating to the GitHub API."
-}
-
-variable "github_token" {
-  description = "GitHub personal access token for authenticating to the GitHub API"
 }
 
 variable "brokers_disk_size" {
@@ -152,18 +79,146 @@ variable "zookeeper_log_dir_size" {
   default     = "15Gi"
 }
 
+resource "random_string" "grafana_admin_pass" {
+  length = 20
+
+  keepers = {
+    host = "${module.gke.host}"
+  }
+}
+
+#
+# efd mod vars looked up in vault, by default
+#
+data "vault_generic_secret" "github" {
+  path = "${local.vault_root}/github"
+}
+
+variable "github_user" {
+  description = "GitHub username for authenticating to the GitHub API. (defaul: vault)"
+  default     = ""
+}
+
+variable "github_token" {
+  description = "GitHub personal access token for authenticating to the GitHub API. (defaul: vault)"
+  default     = ""
+}
+
+data "vault_generic_secret" "grafana_oauth" {
+  path = "${local.vault_root}/grafana_oauth"
+}
+
+variable "grafana_oauth_client_id" {
+  description = "github oauth Client ID for grafana. (default: vault)"
+  default     = ""
+}
+
+variable "grafana_oauth_client_secret" {
+  description = "github oauth Client Secret for grafana. (default: vault)"
+  default     = ""
+}
+
+variable "grafana_oauth_team_ids" {
+  description = "github team id (integer value treated as string)"
+  default     = "1936535"
+}
+
+data "vault_generic_secret" "influxdb_admin" {
+  path = "${local.vault_root}/influxdb_admin"
+}
+
+variable "influxdb_admin_user" {
+  description = "influxdb admin account name. (default: vault)"
+  default     = ""
+}
+
+variable "influxdb_admin_pass" {
+  description = "influxdb admin account passphrase. (default: vault)"
+  default     = ""
+}
+
+data "vault_generic_secret" "influxdb_telegraf" {
+  path = "${local.vault_root}/influxdb_telegraf"
+}
+
 variable "influxdb_telegraf_pass" {
-  description = "InfluxDB password for the telegraf user."
+  description = "InfluxDB password for the telegraf user. (default: vault)"
+  default     = ""
+}
+
+data "vault_generic_secret" "prometheus_oauth" {
+  path = "${local.vault_root}/prometheus_oauth"
+}
+
+variable "prometheus_oauth_client_id" {
+  description = "github oauth client id. (default: vault)"
+  default     = ""
+}
+
+variable "prometheus_oauth_client_secret" {
+  description = "github oauth client secret. (default: vault)"
+  default     = ""
 }
 
 variable "prometheus_oauth_github_org" {
   description = "limit access to prometheus dashboard to members of this org"
+  default     = "lsst-sqre"
 }
 
-variable "prometheus_oauth_client_id" {
-  description = "github oauth client id"
+data "vault_generic_secret" "tls" {
+  path = "${local.vault_root}/tls"
 }
 
-variable "prometheus_oauth_client_secret" {
-  description = "github oauth client secret"
+variable "tls_crt" {
+  description = "wildcard tls certificate. (default: vault)"
+  default     = ""
+}
+
+variable "tls_key" {
+  description = "wildcard tls private key. (default: vault)"
+  default     = ""
+}
+
+locals {
+  # Name of google cloud container cluster to deploy into
+  gke_cluster_name = "${var.deploy_name}-${var.env_name}"
+
+  # remove "<env>-" prefix for production
+  dns_prefix = "${replace("${var.env_name}-", "prod-", "")}"
+
+  prometheus_k8s_namespace     = "monitoring"
+  kafka_k8s_namespace          = "kafka"
+  grafana_k8s_namespace        = "grafana"
+  influxdb_k8s_namespace       = "influxdb"
+  telegraf_k8s_namespace       = "telegraf"
+  nginx_ingress_k8s_namespace  = "nginx-ingress"
+  kafka_efd_apps_k8s_namespace = "kafka-efd-apps"
+
+  grafana_admin_pass = "${random_string.grafana_admin_pass.result}"
+  grafana_admin_user = "admin"
+
+  vault_root = "secret/dm/square/${var.deploy_name}/${var.env_name}"
+
+  github       = "${data.vault_generic_secret.github.data}"
+  github_user  = "${var.github_user != "" ? var.github_user: local.github["user"]}"
+  github_token = "${var.github_token != "" ? var.github_token: local.github["token"]}"
+
+  grafana_oauth               = "${data.vault_generic_secret.grafana_oauth.data}"
+  grafana_oauth_client_id     = "${var.grafana_oauth_client_id != "" ? var.grafana_oauth_client_id : local.grafana_oauth["client_id"]}"
+  grafana_oauth_client_secret = "${var.grafana_oauth_client_secret != "" ? var.grafana_oauth_client_secret : local.grafana_oauth["client_secret"]}"
+
+  influxdb_admin      = "${data.vault_generic_secret.influxdb_admin.data}"
+  influxdb_admin_pass = "${var.influxdb_admin_pass != "" ? var.influxdb_admin_pass : local.influxdb_admin["pass"]}"
+  influxdb_admin_user = "${var.influxdb_admin_user != "" ? var.influxdb_admin_user : local.influxdb_admin["user"]}"
+
+  influxdb_telegraf      = "${data.vault_generic_secret.influxdb_telegraf.data}"
+  influxdb_telegraf_pass = "${var.influxdb_telegraf_pass != "" ? var.influxdb_telegraf_pass : local.influxdb_telegraf["pass"]}"
+
+  prometheus_oauth               = "${data.vault_generic_secret.prometheus_oauth.data}"
+  prometheus_oauth_client_id     = "${var.prometheus_oauth_client_id != "" ? var.prometheus_oauth_client_id : local.prometheus_oauth["client_id"]}"
+  prometheus_oauth_client_secret = "${var.prometheus_oauth_client_secret != "" ? var.prometheus_oauth_client_secret : local.prometheus_oauth["client_secret"]}"
+
+  tls     = "${data.vault_generic_secret.tls.data}"
+  tls_crt = "${var.tls_crt!= "" ? var.tls_crt: local.tls["crt"]}"
+  tls_key = "${var.tls_key!= "" ? var.tls_key: local.tls["key"]}"
 }
