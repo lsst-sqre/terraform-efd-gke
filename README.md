@@ -67,7 +67,6 @@ terragrunt = {
 | confluent\_lb2 |  |
 | grafana\_fqdn |  |
 | influxdb\_fqdn |  |
-| kubeconfig\_filename |  |
 | nginx\_ingress\_ip |  |
 | prometheus\_fqdn |  |
 

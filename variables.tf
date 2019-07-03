@@ -22,13 +22,6 @@ locals {
 }
 
 #
-# kubernetes provider related vars
-#
-locals {
-  kubeconfig_filename = "${path.module}/kubeconfig_${local.gke_cluster_name}"
-}
-
-#
 # gke-std mod passed through vars
 #
 variable "initial_node_count" {

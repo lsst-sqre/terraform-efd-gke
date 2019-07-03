@@ -25,7 +25,3 @@ output "prometheus_fqdn" {
 output "influxdb_fqdn" {
   value = "${module.efd.influxdb_fqdn}"
 }
-
-output "kubeconfig_filename" {
-  value = "${local.kubeconfig_filename}"
-}
