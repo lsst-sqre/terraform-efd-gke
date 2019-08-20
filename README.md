@@ -71,6 +71,7 @@ terragrunt = {
 | nginx\_ingress\_ip |  |
 | prometheus\_fqdn | fqdn of prometheus service. |
 | prometheus\_url | url of prometheus dashboard. |
+| registry\_fqdn | fqdn of schema registry service. |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 

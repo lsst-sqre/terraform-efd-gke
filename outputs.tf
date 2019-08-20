@@ -49,3 +49,8 @@ output "influxdb_fqdn" {
   description = "fqdn of influxdb service."
   value       = "${module.efd.influxdb_fqdn}"
 }
+
+output "registry_fqdn" {
+  description = "fqdn of schema registry service."
+  value       = "${module.efd.registry_fqdn}"
+}
